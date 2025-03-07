@@ -45,7 +45,7 @@ def ingest_docs():
         
         print(f"Loaded {len(raw_docs)} docs")
         
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=10)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=50)
         # text_splitter = TokenTextSplitter(chunk_size=200, chunk_overlap=10)
         documents = text_splitter.split_documents(raw_docs)
 

@@ -163,3 +163,4 @@ output/
 site_data.json
 errors.txt
 .DS_Store
+faiss_index
