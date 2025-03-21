@@ -25,7 +25,7 @@ def run_llm(query:str, index_name:str):
 
 
 if __name__ == "__main__":
-    res = run_llm("what is lcel?", "lcel-md")
+    res = run_llm("what is lcel?", "langchain-doc-index")
     print()
     for doc in res["context"]: print(f"\n{doc.page_content}")
     print(res["answer"])

@@ -50,7 +50,7 @@ def ingest_docs():
         documents = text_splitter.split_documents(raw_docs)
 
         print(f"Going to add {len(documents)} to Pinecone")
-        embeddings = OpenAIEmbeddings()
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         PineconeVectorStore.from_documents(documents, embeddings, index_name=index_name)
         print("Complete!")
     

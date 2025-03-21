@@ -3,4 +3,4 @@ def convert_seconds(seconds):
     seconds %= 3600
     minutes = seconds // 60
     seconds %= 60
-    return hours, minutes, seconds
+    return hours, minutes, round(seconds,2)

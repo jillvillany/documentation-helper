@@ -11,7 +11,7 @@ embeddings = OpenAIEmbeddings(
 # configure client
 pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
 
-index = pc.Index("lcel")
+index = pc.Index("lcel-text")
 
 query = "what is LCEL?"
 xq = embeddings.embed_query(query)

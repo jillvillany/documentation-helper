@@ -8,13 +8,13 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_community.vectorstores import FAISS
 
-# index_name = "langchain-doc-index"
+index_name = "langchain-doc-index"
 # index_name = "langchain-old-doc-index"
 # index_name = "lcel-text"
 
 def run_llm(query:str, chat_history=[]):
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-    docsearch = PineconeVectorStore(index_name="langchain-old-doc-index", embedding=embeddings)
+    docsearch = PineconeVectorStore(index_name=index_name, embedding=embeddings)
     # docsearch = FAISS.load_local(
     #     "faiss_index", embeddings, allow_dangerous_deserialization=True
     # )

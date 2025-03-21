@@ -35,11 +35,11 @@ def ingest_docs():
     
     print(f"Loaded {len(raw_docs)} docs")
     
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=50)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     documents = text_splitter.split_documents(raw_docs)
 
     print(f"Going to add {len(documents)} to Pinecone")
-    embeddings = OpenAIEmbeddings()
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
     PineconeVectorStore.from_documents(documents, embeddings, index_name="langchain-doc-index")
     print("Complete!")
 

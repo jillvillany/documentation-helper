@@ -61,39 +61,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar with user profile
-with st.sidebar:
-    st.title("User Profile")
-    
-    # Add profile picture using a placeholder image
-    st.image("https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y", 
-             width=150,
-             caption="Profile Picture")
-    
-    # Add name input
-    user_name = st.text("Jill Villany")
-    
-    # Add email input
-    user_email = st.text("jillvillany@gmail.com")
-    
-    # Add a divider
-    st.divider()
-
-# Main content
-st.header("Langchain Udemy Course Documentation Helper")
-
-prompt = st.text_input("Prompt", placeholder="Enter your question here")
-
-if (
-    "user_prompt_history" not in st.session_state
-    and "chat_answers_history" not in st.session_state
-    and "chat_history" not in st.session_state
-):
-    st.session_state["user_prompt_history"] = []
-    st.session_state["chat_answers_history"] = []
-    st.session_state["chat_history"] = []
-
-
 def create_sources_string(sources:Set[str]):
     if not sources:
         return ""
@@ -105,19 +72,44 @@ def create_sources_string(sources:Set[str]):
         
     return sources_str
 
-if prompt:
+# Main content
+st.header("Langchain Udemy Course Documentation Helper")
+
+if (
+    "chat_history" not in st.session_state or
+    "user_inputs" not in st.session_state or
+    "responses" not in st.session_state
+):
+    st.session_state.chat_history = []
+    # NOTE: don't want to include the sources appended in the history sent to the llm
+    # so need separate responses and inputs saved
+    st.session_state.user_inputs = []
+    st.session_state.responses = []
+
+# Display chat messages from history on app rerun - i.e. when enter a new prompt
+for user_input, response in zip(st.session_state.user_inputs, st.session_state.responses):
+    st.chat_message("user").write(user_input)
+    st.chat_message("assistant").write(response)
+
+if prompt := st.chat_input("What do you want to know about Langchain?"):
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    # Add user message to chat history
+    st.session_state.chat_history.append(("human", prompt))
+    # Add user message to user inputs displayed in UI
+    st.session_state.user_inputs.append(prompt)
+
     with st.spinner("Generating response..."):
-        res = run_llm(prompt, chat_history=st.session_state["chat_history"])
+        res = run_llm(prompt, chat_history=st.session_state.chat_history)
         sources = set([doc.metadata["source"] for doc in res["source_documents"]])
         
         formatted_res = f"{res['result']} \n\n{create_sources_string(sources)}"
         
-        st.session_state["user_prompt_history"].append(prompt)
-        st.session_state["chat_answers_history"].append(formatted_res)
-        st.session_state["chat_history"].append(("human", prompt))
-        st.session_state["chat_history"].append(("ai", res["result"]))
-        
-if st.session_state["chat_answers_history"]:
-    for generated_res, user_prompt in zip(st.session_state["chat_answers_history"], st.session_state["user_prompt_history"]):
-        st.chat_message("user").write(user_prompt)
-        st.chat_message("assistant").write(generated_res)
+        # Display assistant response in chat message container
+        with st.chat_message("assistant"):
+            st.markdown(formatted_res)
+        # Add llm response to chat history
+        st.session_state.chat_history.append(("ai", res["result"]))
+        # Add formatted response to stored responses displayed in UI
+        st.session_state.responses.append(formatted_res)
