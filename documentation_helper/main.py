@@ -18,11 +18,6 @@ st.markdown("""
         color: #FFFFFF;
     }
     
-    /* Sidebar styling */
-    .css-1d391kg {
-        background-color: #161B22;
-    }
-    
     /* Headers */
     h1, h2, h3 {
         color: #FFFFFF !important;
@@ -46,11 +41,6 @@ st.markdown("""
     /* Links */
     a {
         color: #58A6FF !important;
-    }
-    
-    /* Divider color */
-    .stDivider {
-        border-color: #30363D;
     }
     
     /* Chat message styling */
